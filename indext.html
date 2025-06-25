@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive 3D Solar System</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <div id="labels-container"></div>
+  <div id="info-panel">
+    <span id="close-btn">&times;</span>
+    <h2 id="planet-name-heading">
+      <span id="planet-name"></span>
+      <button id="focus-btn">Focus</button>
+    </h2>
+    <p id="planet-description"></p>
+    <div class="info-section">
+      <p><strong>Diameter:</strong> <span id="planet-diameter"></span></p>
+      <p><strong>Day Length:</strong> <span id="planet-day"></span></p>
+      <p><strong>Year Length:</strong> <span id="planet-year"></span></p>
+      <p><strong>Surface Temp:</strong> <span id="planet-temp"></span></p>
+      <p><strong>Moons:</strong> <span id="planet-moons"></span></p>
+    </div>
+    <div class="info-section">
+      <p><strong>Fun Fact:</strong> <span id="planet-fact"></span></p>
+    </div>
+  </div>
+
+  <div id="controls">
+    <button class="control-button" onclick="resetView()">Reset View</button>
+    <button class="control-button" onclick="toggleAnimation()">Pause/Play</button>
+  </div>
+
+  <div id="instructions">
+    <strong>Controls:</strong><br>
+    • Click planets to learn<br>
+    • Drag to rotate<br>
+    • Scroll to zoom<br>
+    • Right-click + drag to pan
+  </div>
+
+  <div id="controls-info">
+    <b>Controls:</b><br>
+    <b>Rotate:</b> Left-click + Drag<br>
+    <b>Pan:</b> Right-click + Drag<br>
+    <b>Zoom:</b> Scroll Wheel
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
