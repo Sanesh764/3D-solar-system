@@ -5,7 +5,7 @@ camera.position.set(0, 150, 400);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 document.body.appendChild(renderer.domElement);
 
 const labelsContainer = document.getElementById('labels-container');
@@ -121,6 +121,42 @@ Object.entries(planetData).forEach(([name, data]) => {
   );
   orbit.rotation.x = -Math.PI / 2;
   scene.add(orbit);
+
+  // Add Earth's moon
+  if (name === 'earth') {
+    const moonPivot = new THREE.Object3D();
+    planet.add(moonPivot);
+    const moon = new THREE.Mesh(
+      new THREE.SphereGeometry(1.1, 16, 16),
+      new THREE.MeshStandardMaterial({ color: 0xbfbfbf, roughness: 0.9 })
+    );
+    moon.position.x = 8;
+    moon.name = 'Moon';
+    moon.userData = {
+      description: 'Earth\'s only natural satellite.',
+      diameter: '3,474 km', day: '27.3 Earth days', year: '—',
+      temp: '-173 to 127 °C', moons: '0', fact: 'The Moon causes tides on Earth.'
+    };
+    moonPivot.add(moon);
+    celestialObjects.push({ mesh: moon, pivot: moonPivot, speed: data.speed * 12 });
+    planetMeshes.push(moon);
+  }
+
+  // Saturn rings
+  if (name === 'saturn') {
+    const inner = data.radius * 1.5;
+    const outer = data.radius * 2.4;
+    const ringGeom = new THREE.RingGeometry(inner, outer, 128, 1);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: 0xd3c6a6,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.6
+    });
+    const ring = new THREE.Mesh(ringGeom, ringMat);
+    ring.rotation.x = -Math.PI / 2.2;
+    planet.add(ring);
+  }
 });
 
 // --- STARFIELD ---
@@ -204,6 +240,10 @@ const mouse = new THREE.Vector2();
 const infoPanel = document.getElementById('info-panel');
 
 window.addEventListener('click', event => {
+  // Ignore clicks on any UI elements
+  if (event.target.closest('#info-panel') || event.target.closest('#controls') || event.target.closest('#instructions')) {
+    return;
+  }
   if (infoPanel.contains(event.target)) return;
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -280,7 +320,7 @@ function animate() {
     if (focusedObject) {
       const target = new THREE.Vector3();
       focusedObject.getWorldPosition(target);
-      cameraTarget.lerp(target, 0.1);
+      cameraTarget.lerp(target, 0.08);
     } else {
       cameraTarget.lerp(new THREE.Vector3(0, 0, 0), 0.05);
     }
